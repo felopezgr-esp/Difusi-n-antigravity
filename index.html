@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Difusión - Calendario de Eventos</title>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap"
         rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -27,27 +28,48 @@
         <header class="main-header glass-panel">
             <div class="logo-area">
                 <h1>Difusión</h1>
-                <p>Gestión de Eventos y Exposiciones</p>
+                <p>Xestión de Eventos e Exposicións</p>
             </div>
             <div class="actions">
-                <a href="eventos.html" class="btn secondary">
+                <button id="themeToggle" class="icon-btn" title="Cambiar tema">
+                    <i data-lucide="moon"></i>
+                </button>
+                <a href="eventos.html" class="btn secondary" id="listViewBtn">
                     <i data-lucide="list"></i> LISTADO
                 </a>
-                <button id="templateBtn" class="btn secondary" title="Descargar plantilla de ejemplo">
-                    <i data-lucide="file-spreadsheet"></i> Plantilla
+                <button id="templateBtn" class="btn secondary" title="Descargar plantilla de exemplo">
+                    <i data-lucide="file-spreadsheet"></i>
                 </button>
                 <button id="importBtn" class="btn secondary" title="Importar eventos desde Excel">
-                    <i data-lucide="upload"></i> Importar
+                    <i data-lucide="upload"></i>
                 </button>
                 <input type="file" id="importFile" accept=".xlsx, .xls" style="display: none;">
-                <button id="exportBtn" class="btn secondary">
-                    <i data-lucide="download"></i> Excel
+                <button id="exportBtn" class="btn secondary" title="Exportar a Excel">
+                    <i data-lucide="download"></i>
                 </button>
                 <button id="addEventBtn" class="btn primary">
-                    <i data-lucide="plus"></i> Nuevo
+                    <i data-lucide="plus"></i> Novo
                 </button>
             </div>
         </header>
+
+        <section class="stats-bar glass-panel">
+            <div class="stat-item clickable" id="statBtnTotal">
+                <span class="stat-value" id="statTotal">0</span>
+                <span class="stat-label">Eventos</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item clickable" id="statBtnMonth">
+                <span class="stat-value" id="statMonth">0</span>
+                <span class="stat-label">Este Mes</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item clickable" id="statBtnPending">
+                <span class="stat-value" id="statPending">0</span>
+                <span class="stat-label">Pendientes</span>
+            </div>
+        </section>
+
 
         <div class="index-layout">
             <main class="calendar-container glass-panel">
@@ -71,16 +93,16 @@
             </main>
 
             <aside class="index-sidebar">
-                <section id="alertsContainer" class="alerts-container">
+                <section id="alertsContainer" class="alerts-container-sidebar glass-panel">
                     <div class="alerts-header">
-                        <i data-lucide="bell-ring"></i> Tareas y Estado
+                        <i data-lucide="bell-ring"></i> Tareas pendentes
                     </div>
                     <div id="alertsList"></div>
                 </section>
 
                 <section id="undatedEventsContainer" class="undated-container glass-panel">
                     <div class="undated-header">
-                        <i data-lucide="calendar-off"></i> Sin Fecha
+                        <i data-lucide="calendar-off"></i> Evento sen data
                     </div>
                     <div id="undatedEventsList" class="undated-list vertical">
                         <!-- Javascript will populate this -->
@@ -90,25 +112,26 @@
         </div>
     </div>
 
+    <!-- Modals -->
     <!-- Modal: Add Event -->
     <div id="addEventModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Nuevo Evento</h3>
+                <h3>Novo Evento</h3>
                 <button class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <form id="addEventForm">
                 <div class="form-group">
-                    <label>Nombre del Evento</label>
-                    <input type="text" name="title" required placeholder="Ej: Feria de Arte">
+                    <label>Nome do Evento</label>
+                    <input type="text" name="title" required placeholder="Ex: Feira de Arte">
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label>Fecha Inicio (Opcional)</label>
+                        <label>Data Inicio (Opcional)</label>
                         <input type="date" name="start">
                     </div>
                     <div class="form-group">
-                        <label>Fecha Fin (Opcional)</label>
+                        <label>Data Fin (Opcional)</label>
                         <input type="date" name="end">
                     </div>
                 </div>
@@ -117,14 +140,14 @@
                     <input type="text" name="schedule" placeholder="10:00 - 18:00">
                 </div>
                 <div class="form-group">
-                    <label>Concello / Ayuntamiento</label>
+                    <label>Concello</label>
                     <select id="locationSelect" name="municipality">
                         <option value="">-- Selecciona un Concello --</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Dirección Exacta / Sala / Local</label>
-                    <input type="text" id="locationInput" name="location" placeholder="Calle, nº, pabellón..."
+                    <input type="text" id="locationInput" name="location" placeholder="Rúa, nº, pabellón..."
                         autocomplete="off">
                     <input type="hidden" id="latInput" name="lat">
                     <input type="hidden" id="lngInput" name="lng">
@@ -132,9 +155,9 @@
                 </div>
                 <div class="form-group">
                     <label>Detalles / Notas</label>
-                    <textarea name="details" placeholder="Notas adicionales..." style="min-height: 80px;"></textarea>
+                    <textarea name="details" placeholder="Notas adicionais..." style="min-height: 80px;"></textarea>
                 </div>
-                <button type="submit" class="btn primary full-width">Guardar Evento</button>
+                <button type="submit" class="btn primary full-width">Gardar Evento</button>
             </form>
         </div>
     </div>
@@ -149,16 +172,16 @@
             <form id="editEventForm">
                 <input type="hidden" name="id" id="editEventId">
                 <div class="form-group">
-                    <label>Nombre del Evento</label>
+                    <label>Nome do Evento</label>
                     <input type="text" name="title" id="editTitle" required>
                 </div>
                 <div class="row">
                     <div class="form-group">
-                        <label>Fecha Inicio (Opcional)</label>
+                        <label>Data Inicio (Opcional)</label>
                         <input type="date" name="start" id="editStart">
                     </div>
                     <div class="form-group">
-                        <label>Fecha Fin (Opcional)</label>
+                        <label>Data Fin (Opcional)</label>
                         <input type="date" name="end" id="editEnd">
                     </div>
                 </div>
@@ -167,7 +190,7 @@
                     <input type="text" name="schedule" id="editSchedule">
                 </div>
                 <div class="form-group">
-                    <label>Concello / Ayuntamiento</label>
+                    <label>Concello</label>
                     <select id="editLocationSelect" name="municipality">
                         <option value="">-- Selecciona un Concello --</option>
                     </select>
@@ -196,7 +219,7 @@
     <div id="eventDetailsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="detailTitle">Título del Evento</h3>
+                <h3 id="detailTitle">Título do Evento</h3>
                 <button class="close-modal"><i data-lucide="x"></i></button>
             </div>
             <div class="event-info">
@@ -207,8 +230,8 @@
 
             <div class="checklist-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h4 style="margin: 0;">Tareas y Estado</h4>
-                    <button id="editEventBtn_FromDetails" class="btn secondary btn-small"><i data-lucide="info"></i>
+                    <h4 style="margin: 0;">Tareas e Estado</h4>
+                    <button id="editEventBtn_FromDetails" class="btn secondary btn-small"><i data-lucide="edit-3"></i>
                         EDITAR</button>
                 </div>
                 <div class="progress-bar-container">
@@ -227,11 +250,24 @@
         </div>
     </div>
 
+    <!-- Modal: Filtered View from Stats -->
+    <div id="filteredViewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="filteredViewTitle">Lista de Eventos</h3>
+                <button class="close-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div id="filteredEventsList" class="filtered-list">
+                <!-- Javascript will populate this -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
     <script src="locations_data.js"></script>
     <script src="script.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 
 </html>

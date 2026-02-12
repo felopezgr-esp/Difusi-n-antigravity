@@ -40,37 +40,57 @@
                 <p>Gestión de Eventos y Exposiciones</p>
             </div>
             <div class="actions">
+                <button id="themeToggle" class="icon-btn" title="Cambiar tema">
+                    <i data-lucide="moon"></i>
+                </button>
                 <a href="index.html" class="btn secondary">
                     <i data-lucide="calendar"></i> CALENDARIO
                 </a>
-                <button id="templateBtn" class="btn secondary" title="Descargar plantilla de ejemplo">
-                    <i data-lucide="file-spreadsheet"></i> Plantilla
+                <button id="templateBtn" class="btn secondary" title="Descargar plantilla de exemplo">
+                    <i data-lucide="file-spreadsheet"></i>
                 </button>
                 <button id="importBtn" class="btn secondary" title="Importar eventos desde Excel">
-                    <i data-lucide="upload"></i> Importar
+                    <i data-lucide="upload"></i>
                 </button>
                 <input type="file" id="importFile" accept=".xlsx, .xls" style="display: none;">
-                <button id="exportBtn" class="btn secondary">
-                    <i data-lucide="download"></i> Excel
+                <button id="exportBtn" class="btn secondary" title="Exportar a Excel">
+                    <i data-lucide="download"></i>
                 </button>
                 <button id="addEventBtn" class="btn primary">
-                    <i data-lucide="plus"></i> Nuevo
+                    <i data-lucide="plus"></i> Novo
                 </button>
             </div>
         </header>
+
+        <section class="stats-bar glass-panel">
+            <div class="stat-item clickable" id="statBtnTotal">
+                <span class="stat-value" id="statTotal">0</span>
+                <span class="stat-label">Eventos</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item clickable" id="statBtnMonth">
+                <span class="stat-value" id="statMonth">0</span>
+                <span class="stat-label">Este Mes</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item clickable" id="statBtnPending">
+                <span class="stat-value" id="statPending">0</span>
+                <span class="stat-label">Pendientes</span>
+            </div>
+        </section>
 
         <div class="sidebar-map-layout">
             <aside class="content-sidebar">
                 <section id="alertsContainer" class="alerts-container compact-view">
                     <div class="alerts-header">
-                        <i data-lucide="bell-ring"></i> Tareas y Estado
+                        <i data-lucide="bell-ring"></i> Tareas pendentes
                     </div>
                     <div id="alertsList"></div>
                 </section>
 
                 <section id="undatedEventsContainer" class="undated-container glass-panel">
                     <div class="undated-header">
-                        <i data-lucide="calendar-off"></i> Sin Fecha
+                        <i data-lucide="calendar-off"></i> Evento sen data
                     </div>
                     <div id="undatedEventsList" class="undated-list vertical">
                         <!-- Javascript will populate this -->
@@ -82,28 +102,38 @@
                 <div id="map"></div>
             </div>
 
-            <aside class="filters-sidebar glass-panel">
+            <aside class="filters-sidebar-compact glass-panel">
                 <div class="filter-group">
-                    <label>Buscar</label>
-                    <input type="text" id="searchInput" placeholder="Nombre, lugar...">
-                </div>
-                <div class="filter-group">
-                    <label>Filtrar Mes</label>
-                    <input type="text" id="monthFilter" placeholder="Ej: Enero 2024" list="monthSuggestions">
-                    <datalist id="monthSuggestions"></datalist>
+                    <label>Evento</label>
+                    <input type="text" id="searchInput" placeholder="Nome...">
                 </div>
                 <div class="filter-group">
-                    <label>Zoom Mapa</label>
-                    <input type="number" id="mapZoomInput" value="7.5" min="1" max="20" step="0.1" style="width: 100%;">
+                    <label>Mes</label>
+                    <input type="text" id="monthFilter" placeholder="Mes" list="monthSuggestions">
                 </div>
-                <div class="filter-actions-vertical">
-                    <button id="searchBtn" class="btn primary full-width">
-                        <i data-lucide="search"></i> Buscar
-                    </button>
-                    <button id="resetFiltersBtn" class="btn secondary full-width" title="Reiniciar filtros">
-                        <i data-lucide="rotate-ccw"></i> Limpiar
-                    </button>
+                <div class="filter-group">
+                    <label>Ano</label>
+                    <input type="number" id="yearFilter" placeholder="Ano" value="2026">
                 </div>
+                <div class="filter-group">
+                    <label>Zoom</label>
+                    <input type="number" id="mapZoomInput" value="7.5" step="0.1">
+                </div>
+                <div class="filter-group">
+                    <label>Provincia</label>
+                    <select id="provinceFilter">
+                        <option value="">Todas</option>
+                        <option value="A Coruña">A Coruña</option>
+                        <option value="Lugo">Lugo</option>
+                        <option value="Ourense">Ourense</option>
+                        <option value="Pontevedra">Pontevedra</option>
+                    </select>
+                </div>
+                <div class="filter-actions-compact">
+                    <button id="searchBtn" class="icon-btn-primary"><i data-lucide="search"></i></button>
+                    <button id="resetFiltersBtn" class="icon-btn-secondary"><i data-lucide="rotate-ccw"></i></button>
+                </div>
+                <datalist id="monthSuggestions"></datalist>
             </aside>
         </div>
 
@@ -112,15 +142,15 @@
                 <table class="events-table">
                     <thead>
                         <tr>
-                            <th id="sortDate" style="cursor: pointer;">Fecha <i data-lucide="arrow-up-down"></i></th>
+                            <th id="sortDate" style="cursor: pointer;">Data <i data-lucide="arrow-up-down"></i></th>
                             <th id="sortTitle" style="cursor: pointer;">Evento <i data-lucide="arrow-up-down"></i></th>
-                            <th id="sortLoc" style="cursor: pointer;">Ayuntamiento <i data-lucide="arrow-up-down"></i>
+                            <th id="sortLoc" style="cursor: pointer;">Concello <i data-lucide="arrow-up-down"></i>
                             </th>
                             <th id="sortProvince" style="cursor: pointer;">Provincia <i data-lucide="arrow-up-down"></i>
                             </th>
                             <th>Horario</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
+                            <th>Accións</th>
                         </tr>
                     </thead>
                     <tbody id="eventsTableBody">
@@ -250,8 +280,8 @@
             <div class="checklist-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <h4 style="margin: 0;">Tareas y Estado</h4>
-                    <button id="editEventBtn_FromDetails" class="btn secondary btn-small"><i data-lucide="info"></i>
-                        EDITAR</button>
+                    <button id="editEventBtn_FromDetails" class="btn secondary btn-small"><i
+                            data-lucide="edit-3"></i></button>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-info">
@@ -268,6 +298,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal: Filtered View from Stats -->
+    <div id="filteredViewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="filteredViewTitle">Lista de Eventos</h3>
+                <button class="close-modal"><i data-lucide="x"></i></button>
+            </div>
+            <div id="filteredEventsList" class="filtered-list">
+                <!-- Javascript will populate this -->
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="locations_data.js"></script>
     <script src="script.js"></script>
